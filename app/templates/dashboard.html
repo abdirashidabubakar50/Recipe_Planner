@@ -1,0 +1,71 @@
+{% extends "layout2.html" %}
+
+{% block title %} Dashbaord {% endblock %}
+
+{% block extra_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">{% endblock %}
+{% block content %}
+<div class="container">
+    <section class="dashboard">
+        <div class="side-bar" id="sidebar">
+            <div id="toggle-btn" class="toggle-btn">&lt;</div>
+            <a href="{{url_for('api.recipes')}}" class="tab">
+                <span class="icon">🏠</span>
+                <span class="text">Dashboard</span>
+            </a>
+            <a href="recipes.html" class="tab">
+                <span class="icon">🍲</span>
+                <span class="text">Recipes</span>
+            </a>
+            <a href="meal_plan.html" class="tab">
+                <span class="icon">📅</span>
+                <span class="text">Meal Plan</span>
+            </a>
+        </div>
+    </section>
+    <section class="content" id="content">
+        <div>
+            <img src="{{url_for('static', filename='img/dashboard.png')}}" alt="">
+            
+        </div>
+        <div>
+            <h1>Welcome to the world of Recipes. looking for a recipe, don't worry we will sort you out</h1>
+            <div class="down-arrow"></div>
+            <div class="button-container">
+                <a class="action-button" href="{{url_for('api.recipes')}}">Recipes</a>
+                <a class="action-button" href="{{url_for('api.meal_plan')}}">Meal Plan</a>
+            </div>
+        </div>
+    </section>
+</div> 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const header = document.getElementById('header')
+
+        if (sidebar && content && toggleBtn &&header) {
+            toggleBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('collapsed');
+                header.classList.toggle('collapsed')
+            });
+
+            function setActiveTab() {
+                const currentUrl = window.location.href;
+                document.querySelectorAll('.sidebar .tab').forEach(tab => {
+                    if (currentUrl.includes(tab.getAttribute('href'))) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+            }
+
+            setActiveTab();
+        } else {
+            console.error('One or more elements are not found. Ensure sidebar, content, and toggle-btn have the correct IDs.');
+        }
+    });
+</script>
+{% endblock %}
