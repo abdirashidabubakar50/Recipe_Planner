@@ -8,7 +8,7 @@
     <section class="dashboard">
         <div class="side-bar" id="sidebar">
             <div id="toggle-btn" class="toggle-btn">&lt;</div>
-            <a href="{{url_for('api.recipes')}}" class="tab">
+            <a href="{{url_for('api.dashboard')}}" class="tab">
                 <span class="icon">🏠</span>
                 <span class="text">Dashboard</span>
             </a>
@@ -31,7 +31,7 @@
             <h1>Welcome to the world of Recipes. looking for a recipe, don't worry we will sort you out</h1>
             <div class="down-arrow"></div>
             <div class="button-container">
-                <a class="action-button" href="{{url_for('api.recipes')}}">Recipes</a>
+                <a class="action-button" href="{{url_for('api.search_recipes')}}">Recipes</a>
                 <a class="action-button" href="{{url_for('api.meal_plan')}}">Meal Plan</a>
             </div>
         </div>

@@ -14,10 +14,11 @@ header {
     position: sticky;
     top: 0;
     transition: margin-left 0.3s;
+    margin-left: 160px;
 }
-/* header.collapsed{
+header.collapsed{
     margin-left: 40px;
-} */
+}
 .header-content {
     display: flex;
     justify-content: space-between;
@@ -75,7 +76,7 @@ footer {
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 10;
+    top: 0;
     left: 0;
     height: 100%;
     overflow: hidden;

@@ -8,7 +8,7 @@
         <section class="dashboard-2">
             <div class="side-bar-2" id="sidebar-2">
                 <div id="toggle-btn-2" class="toggle-btn-2">&lt;</div>
-                <a href="{{url_for('api.recipes')}}" class="tab-2">
+                <a href="{{url_for('api.dashboard')}}" class="tab-2">
                     <span class="icon">🏠</span>
                     <span class="text">Dashboard</span>
                 </a>
@@ -33,7 +33,7 @@
         {% endif %}
 
         {% if recipes %}
-            <ul class="recipe-list">
+            <div class="recipe-list">
                 {% for hit in recipes %}
                     {% set recipe = hit.recipe %}
                     <li class="recipe">
@@ -41,10 +41,10 @@
                         <h2>{{ recipe.label }}</h2>
                         <p>Calories: {{recipe.calories | round(0)}}</p>
                         <p>Servings: {{recipe.yield}}</p>
-                        <p><a href="{{recipe.url}}" target="blank">View Recipe</a></p>
+                        <p><a href="{{ url_for('api.recipe_detail', recipe_id=recipe.uri | urlencode)}}" target="blank">View Recipe</a></p>
                     </li>
                 {% endfor %}
-                </ul>
+            </div>
         {% endif %}
     </div>
     <script>
@@ -52,13 +52,13 @@
             const sidebar = document.getElementById('sidebar-2');
             const container = document.getElementById('container-2');
             const toggleBtn = document.getElementById('toggle-btn-2');
-            // const header = document.getElementById('header')
+            const header = document.getElementById('header')
     
             if (sidebar && toggleBtn) {
                 toggleBtn.addEventListener('click', function() {
                     sidebar.classList.toggle('collapsed');
                     container.classList.toggle('collapsed');
-                    // header.classList.toggle('collapsed');
+                    header.classList.toggle('collapsed');
                 });
     
                 function setActiveTab() {

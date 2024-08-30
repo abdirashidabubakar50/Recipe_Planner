@@ -1,6 +1,7 @@
 from flask import Blueprint,render_template, redirect, url_for, flash, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
+from flask_login import login_required, current_user, login_user, logout_user
 from app.models.user import User
 
 auth = Blueprint('auth', __name__)
@@ -66,21 +67,23 @@ def login():
 
         if user and check_password_hash(user.password, password):
             """set session data"""
-            session['user_id'] = user.id
-            session['username'] = user.username
+            login_user(user)
             flash('Login successful!', 'successful')
-            return redirect(url_for('api.dashboard')) # Redirect to the user's dashboard
+            return redirect(url_for('api.dashboard'))
         else:
             errors['username'] = "Incorrect username or password"
             return render_template('login.html', errors=errors)
 
     return render_template('login.html', errors=errors)
 
+
+
 """logout the user"""
 @auth.route('/logout')
+@login_required
 def logout():
     """clear the session data"""
-    session.clear()
+    logout_user()
 
     """Redirect the user to the login page or homepage"""
-    return redirect(url_for('api.home'))
+    return redirect(url_for('auth.login'))
