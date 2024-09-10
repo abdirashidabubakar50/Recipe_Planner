@@ -17,6 +17,7 @@ class Meal_plan(db.Model):
     created_at = db.Column(db.DateTime,nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime,nullable=False, default=datetime.utcnow)
     groceries = db.relationship('Grocery', backref='meal_plan', lazy=True,cascade='all, delete-orphan')
+    recipes = db.relationship('AllRecipe', secondary='mealplan_recipe', backref='meal_plan')
 
     def __repr__(self):
         return f"'{self.title}, Created On {self.created_at}"
@@ -25,7 +26,7 @@ class Meal_plan(db.Model):
         """saves the meal plan to the database"""
         db.session.add(self)
         db.session.commit()
-    
+
     def update(self, title=None, description=None, start_date=None, end_date=None):
         """updates the meal plan and saves the new plan in the database"""
         if title is not None:

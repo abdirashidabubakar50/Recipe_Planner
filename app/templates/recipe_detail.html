@@ -1,1 +1,121 @@
-<h1>Here are the recipes</h1>
+{% extends "layout2.html" %}
+
+{% block title %} Recipe Details {% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/recipe.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="recipe-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+             </div>
+            {% endif %}
+        {% endwith %}
+        <div class="text">
+            <h1>{{ recipe.name }}</h1>
+            <strong><p>{{recipe.diet_type}}</p></strong>
+            <button type="submit" class="action-button">Read directions</button>
+            <button class="add-icon" id="add-to-mealplan-{{ recipe.id}}" type="submit" onclick="AddtoMealplan('{{ recipe.id }}')">
+                <svg width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                  <path d="M8 7V1a1 1 0 0 1 2 0v6h6a1 1 0 0 1 0 2H10v6a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h6z"/>
+                </svg>
+                Add to Meal Plan
+            </button>
+            <button id="save-recipe-{{ recipe.id }}" type="submit" class="save-icon" onclick="SaveRecipe('{{ recipe.id }}')">
+                <svg width="16" height="16" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
+                  <path d="M8 0a.5.5 0 0 1 .5.5V1h1V.5A.5.5 0 0 1 10 0h5a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-.5.5H1a.5.5 0 0 1-.5-.5V.5A.5.5 0 0 1 1 0h7zM8 1v.5h2V1h-2zm4 2H2v12h12V3zm-1 8H3v-1h8v1zm-4-2h4v1H7v-1zm2-2H6v1h3v-1z"/>
+                </svg>
+                Save Recipe
+            </button>
+        </div>
+        <div class="recipe-details">
+            <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}">
+        </div>
+    </div>
+    <div class="ingredients">
+        <div class="ingredients-detail">
+            <h2>Ingredients</h2>
+            <ul>
+                {% for ingredient in recipe.ingredients.split(', ') %}
+                    <li>{{ingredient}}</li>
+                {%endfor%}
+            </ul>
+        </div>
+        <div class="ingredient-img">
+            <img src="{{url_for('static', filename='img/ingredients3.png')}}" alt="">
+        </div>
+    </div>
+    <div class="instructions">
+        <ul>
+            <h3>Instructions | Directions</h3>
+            {% for instructions in recipe.instructions.split('. ')%}
+            <li>
+                {{instructions}}
+            </li>
+            {%endfor%}
+        </ul>
+    </div>
+    <script>
+        const csrfToken = "{{ csrf_token() }}";  // Pass CSRF token to JavaScript
+    
+        function AddtoMealplan(recipeId) {
+            fetch(`/add_to_mealplan/${recipeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Add CSRF token to headers
+                },
+                body: JSON.stringify({ recipe_id: recipeId })  // Optional: Send data if needed
+            }).then(response => {
+                if (response.ok) {
+                    // Change button icon to "check"
+                    const button = document.getElementById(`add-to-mealplan-${recipeId}`);
+                    button.innerHTML = `
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        Added to Meal Plan
+                    `;
+                    button.disabled = true;  // Optionally disable the button
+                } else {
+                    console.error('Failed to add to meal plan:', response.statusText);
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    
+        function SaveRecipe(recipeId) {
+            fetch(`/save_recipe/${recipeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Add CSRF token to headers
+                },
+                body: JSON.stringify({ recipe_id: recipeId })  // Optional: Send data if needed
+            }).then(response => {
+                if (response.ok) {
+                    // Change button icon to "check"
+                    const button = document.getElementById(`save-recipe-${recipeId}`);
+                    button.innerHTML = `
+                        <svg width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        Recipe Saved
+                    `;
+                    button.disabled = true;  // Optionally disable the button
+                } else {
+                    console.error('Failed to save recipe:', response.statusText);
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    </script>      
+</main>
+{% endblock %}

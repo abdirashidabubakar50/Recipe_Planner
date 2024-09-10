@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Smart Recipe Planner{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
 </head>
 <body>
     <header>
         <div class="header-content">
             <div class="logo">
-                <a href=""><img src="{{url_for('static', filename='img/logo.jpg')}}" alt=""></a>
+                <a href=""><img src="{{url_for('static', filename='img/log3.png')}}" alt="">RecipePlanner</a>
                 {% block extra_styles %}{% endblock %}
             </div>
             <nav>
                 <ul>
+                    <li><a href="{{url_for('auth.register')}}">Home</a></li>
                     <li><a href="{{url_for('auth.register')}}">Register</a></li>
                     <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                 </ul>

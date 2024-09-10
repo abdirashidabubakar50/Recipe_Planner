@@ -1,0 +1,191 @@
+main{
+    height: auto;
+    background-color: #F7F9F9;
+}
+
+.recipe-container {
+    display: flex;
+    padding: 10px;
+    max-width: 1200px;
+    justify-content: center;
+    margin: auto;
+    /* border: 2px solid #ddd; */
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-details{
+    flex-direction: row;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.recipe-details img{
+    height: 400px;
+    border-radius: 10px;
+    max-width: 100%;
+    width: auto;
+    margin-left: 100px;
+    margin-top: 8rem;
+    margin-bottom: 20px;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    max-width: 400px;
+    /* margin-left: 120px; */
+    margin-top: 6rem;
+    padding: 0;
+}
+
+.text h1{
+    font-size: 30px;
+    font-weight: bold;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+p{
+    margin: 10px;
+}
+.action-button{
+    display: flex;
+    justify-content: space-between;
+    /* align-items: flex-end; */
+    background-color:#FF6B27;
+    color: rgb(5, 5, 5);
+    text-align: center;
+    border-style: none;
+    width: 150px;
+    border-radius: 12px;
+    padding: 10px;
+    margin-top: 30px;
+}
+.add-icon {
+    background-color: transparent; /* Transparent background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Change cursor to pointer */
+    padding: 5px; /* Add some padding */
+    display: inline-flex; /* Align icon */
+    align-items: center; /* Center the icon */
+    margin-top: 50px;
+}
+
+.add-icon i, .add-icon svg {
+    font-size: 16px; /* Set icon size */
+    color: #007bff; /* Set icon color (blue) */
+    padding-right: 10px;
+}
+
+.add-icon:hover i, .add-icon:hover svg {
+    color: #0056b3; /* Darker color on hover */
+}
+.save-icon {
+    background-color: transparent; /* Transparent background */
+    border: none; /* Remove default button border */
+    cursor: pointer; /* Change cursor to pointer */
+    padding: 5px; /* Add some padding */
+    display: inline-flex; /* Align icon */
+    align-items: center; /* Center the icon */
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+.save-icon i, .save-icon svg {
+    font-size: 16px; /* Set icon size */
+    color: #28a745; /* Set icon color (green) */
+    padding-right: 10px;
+}
+
+.save-icon:hover i, .save-icon:hover svg {
+    color: #1e7e34; /* Darker color on hover */
+}
+
+.ingredients{
+    display: flex;
+    padding: 10px;
+    max-width: 1300px;
+    justify-content: center;
+    margin: auto;
+    /* height: 100vh; */
+    /* border: 2px solid #ddd; */
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.1);
+    font-family:'Times New Roman', Times, serif;
+}
+.ingredients-detail{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    max-width: 400px;
+}
+.ingredients li{
+    list-style:circle;
+    padding: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.ingredients-detail h2{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.ingredient-img img{
+    height: 300px;
+    max-width: 400px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-left: 300px;
+    margin-top: 30px;
+}
+.instructions{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    display: flex;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.instructions ul li{
+    padding: 8px;
+    font-weight: 200;
+}
+.instructions ul h3{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .recipe-container,
+    .recipe-details {
+        flex-direction: column; 
+        align-items: center;
+        margin: 0;
+        padding: 10px;
+    }
+    
+    .recipe-details img {
+        margin: 20px 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .text {
+        max-width: 100%; /* Full width for text */
+        margin-top: 20px; /* Adjust margin for spacing */
+    }
+
+    .ingredients, .instructions {
+        flex-direction: column; /* Stack ingredients and instructions */
+        padding: 10px; /* Add padding for spacing */
+        max-width: 100%; /* Full width */
+    }
+
+    .ingredient-img img {
+        margin: 20px auto; /* Center-align image */
+        width: 100%; /* Full width */
+        height: auto; /* Maintain aspect ratio */
+    }
+}
+
+@media (min-width: 1600px) {
+    .recipe-container {
+        display: flex;
+    }
+}

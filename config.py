@@ -10,6 +10,8 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     EDAMAM_API_KEY = os.getenv('EDAMAM_API_KEY')
     EDAMAM_APP_ID= os.getenv('EDAMAM_APP_ID')
+    SPOONACULAR_API_KEY = os.getenv('SPOONACULAR_API_KEY')
+
 
 class DevelopmentConfig(Config):
     DEBUG = True # enables debug mode in flask

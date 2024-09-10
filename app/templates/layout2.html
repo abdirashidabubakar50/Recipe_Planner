@@ -4,20 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Smart Recipe Planner{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
 </head>
 <body>
-    <header id="header">
-        <div class="header-content">
-            <div class="logo">
-                <a href=""><img src="{{url_for('static', filename='img/logo.jpg')}}" alt=""></a>
-                {% block extra_styles %}{% endblock %}
+    <header class="navbar">
+        <div class="logo">
+            <!-- <img src="{{url_for('static', filename='img/log3.png')}}" alt=""> -->
+            <a href="" class="logo-text"><img src="{{url_for('static', filename='img/log3.png')}}" alt="">Recipe Planner</a>
+            {% block extra_styles %}{% endblock %}
+        </div>
+        <nav class="nav-links">
+            <a href="{{url_for('api.dashboard')}}">Dashboard</a>
+            <div class="dropdown">
+                <a href="{{ url_for('api.search_recipe') }}" class="dropdown-link">Recipes</a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('api.search_recipe') }}">Search Recipes</a>
+                    <a href="{{url_for('api.saved_recipes', user_id=current_user.id)}}">Saved Recipes</a>
+                </div>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="{{url_for('auth.logout')}}">Profile</a></li>
+            <a href="{{url_for('api.meal_plan')}}">Meal Plans</a>
+            <a href="{{url_for('auth.logout')}}">Settings</a>
+        </nav>
+        <!-- Modal Structure -->
+        <!-- <div id="recipe-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Recipe Options</h2>
+                <ul class="options-list">
+                    <li><a href="{{ url_for('api.search_recipe') }}">Search Recipes</a></li>
+                    <li><a href="">Saved Recipes</a></li>
                 </ul>
-            </nav>
+            </div>
+        </div> -->
+        <div class="user-info">
+            <span>{{user.username}}</span>
+            <a href="{{url_for('api.profile', user_id=user_id)}}"><img src="{{url_for('static', filename='img/profile.png')}}" alt="Profile Picture" class="profile-pic"></a>
         </div>
     </header>
     <main>
@@ -26,6 +47,34 @@
     <footer>
         <p>&copy; 2024 Smart Recipe Planner. All rights reserved.</p>
     </footer>
-
+    <script>
+        // Get the modal
+        var modal = document.getElementById("recipe-modal");
+    
+        // Get the link that opens the modal
+        var recipeLink = document.getElementById("recipe-link");
+    
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("close")[0];
+    
+        // When the user clicks the link, open the modal
+        recipeLink.onclick = function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            modal.style.display = "block";
+        }
+    
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    
 </body>
 </html>

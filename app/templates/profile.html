@@ -1,0 +1,83 @@
+{% extends "layout2.html" %}
+
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/meal.css') }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="meal-planner-container">
+        <div class="meal-planner-header">
+            <h1>{{user.username}}</h1>
+        </div>
+        <div class="meal-planner-tabs">
+            <button class="tab">Settings <span>Customize your settings</span></button>
+            <button class="tab">Preferences <span>Set your preferences</span></button>
+        </div>
+
+        <!-- Content Sections for Tabs -->
+        <div class="tab-content">
+            <section class="profile-container">
+                <h1>Profile Setting</h1>
+            
+                <!-- Display flash messages -->
+                <!-- {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %} -->
+            
+                <form action="{{ url_for('api.profile', user_id=user_id) }}" method="POST" class="profile-form">
+                    {{ form.csrf_token }}
+                    <div class="profile-pic">
+                        <!-- Optional: Add a profile picture upload feature -->
+                        <img src="{{ url_for('static', filename='img/profile_pic.png') }}" alt="Profile Picture">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" value="{{ user.username}}" required>
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="confirm_password">Old Password:</label>
+                        <input type="password" id="password" name="password" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">New Password:</label>
+                        <input type="password" id="password" name="password" value="" required>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+            
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </section>
+            <!-- <div class="no-recipes">
+                <div class="no-recipes-content">
+                    <img src="{{url_for('static', filename='img/planner.png')}}" alt="No Recipes Icon">
+                    <p class="no-recipes-message">You have no recipes planned</p>
+                    <p class="no-recipes-subtext">Add recipes from your personalized recommendations or your saved recipe collections to get started.</p>
+                </div>
+            </div> -->
+        </div>
+
+        <!-- Repeat content for other tabs with different IDs or classes -->
+        <div class="tab-content">
+            <!-- This Week Content -->
+            
+        </div>
+
+    </div>
+</main>
+
+<!-- Include JavaScript -->
+<script src="{{ url_for('static', filename='js/meal.js') }}"></script>
+{% endblock %}

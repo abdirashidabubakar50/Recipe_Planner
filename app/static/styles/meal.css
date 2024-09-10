@@ -1,0 +1,238 @@
+
+main {
+    margin: 0;
+    padding: 0;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.meal-planner-container {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.meal-planner-header {
+    text-align: flex-start;
+    margin-bottom: 20px;
+}
+
+.meal-planner-header h1 {
+    font-size: 40px;
+    color: #030303;
+    margin: 0;
+}
+
+.meal-planner-tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 15px 0;
+    text-align: center;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #555;
+    cursor: pointer;
+    position: relative;
+}
+
+.tab.active {
+    color: #3a6ea5;
+    border-bottom: 3px solid #3a6ea5;
+}
+
+.tab span {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.date-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 5px;
+    background-color: #ddd;
+}
+
+.date-nav {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #2e2d2d;
+    cursor: pointer;
+    margin: 0 20px;
+}
+
+.selected-date {
+    font-size: 18px;
+    color: #333;
+}
+
+.add-recipe-container {
+    text-align: left;
+    margin: 30px 0;
+}
+
+.add-recipe-button {
+    background-color: #f9f9f9;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.add-recipe-button span{
+    display: inline-block;
+    background-color: #e42d2d;
+    font-size: 20px;
+    color: #fcfcfc;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    text-align: center;
+    line-height: 15px; 
+    cursor: pointer;
+    margin: 5px;
+}
+.add-recipe-button a {
+    text-decoration: none;
+    color: black;
+    font-weight: 550;
+}
+.no-recipes {
+    text-align: center;
+    margin: 50px 0;
+    color: #555;
+}
+
+.no-recipes-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-recipes img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.no-recipes-message {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.no-recipes-subtext {
+    font-size: 14px;
+    color: #777;
+    margin-top: 10px;
+}
+
+.tab-content ul li{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding: 8px;
+    font-size: 26px;
+    font-weight: 500;
+    color:#242222e1
+}
+
+.flash-messages {
+    margin: 20px 0;
+    padding: 10px;
+}
+
+.flash-messages .alert {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    list-style-type: none;
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d0e9c6;
+}
+
+.alert-error {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-pic {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #fc3131;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #fc3131;
+}

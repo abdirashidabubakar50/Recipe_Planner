@@ -14,7 +14,7 @@ class User(UserMixin,db.Model):
     updated_at = db.Column(db.DateTime,nullable=False, default=datetime.utcnow)
     preferences = db.Column(db.JSON, nullable=True)
     allergies = db.Column(db.JSON, nullable=True)
-    recipes = db.relationship('Recipe', backref='user', cascade='all, delete-orphan')
+    recipes = db.relationship('SavedRecipe', backref='user', cascade='all, delete-orphan')
     meal_plans = db.relationship('Meal_plan', backref='user', lazy=True)
 
 
@@ -30,12 +30,12 @@ class User(UserMixin,db.Model):
 
     def update(self, username=None, email=None, preference=None, allergies=None):
         """ update the userr's information"""
-        if name is not None:
-            self.name = Name
+        if username is not None:
+            self.username = Name
         if email is not None:
             self.email = email
-        if preferences is not None:
-            self.preferences = preferences
+        if preference is not None:
+            self.preference = preference
         if allergies is not None:
             sefl.allergies = allergies
         db.session.commit()

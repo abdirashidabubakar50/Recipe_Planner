@@ -1,0 +1,78 @@
+{% extends "layout2.html" %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/meal.css') }}">
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="meal-planner-container">
+        <div class="meal-planner-header">
+            <h1>Meal Planner</h1>
+        </div>
+        <div class="meal-planner-tabs">
+            <button class="tab active">Today <span>0 recipes</span></button>
+            <button class="tab">This Week <span>0 recipes</span></button>
+            <button class="tab">Unscheduled Recipes <span></span></button>
+        </div>
+
+        <!-- Content Sections for Tabs -->
+        <div class="tab-content">
+            <div id="calendar"></div> <!-- Calendar Container -->
+
+            <div class="add-recipe-container">
+                <button class="add-recipe-button">
+                    <span> + </span><a href="">Add Recipe</a>
+                </button>
+            </div>
+
+            <div class="no-recipes">
+                <div class="no-recipes-content">
+                    <img src="{{ url_for('static', filename='img/planner.png') }}" alt="No Recipes Icon">
+                    <p class="no-recipes-message">You have no recipes planned</p>
+                    <p class="no-recipes-subtext">Add recipes from your personalized recommendations or your saved recipe collections to get started.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repeat content for other tabs with different IDs or classes -->
+        <div class="tab-content">
+            <!-- This Week Content -->
+            <ul>
+                <li><span>Sunday</span></li>
+                <li><span>Monday</span></li>
+                <li><span>Tuesday</span></li>
+                <li><span>Wednesday</span></li>
+                <li><span>Thursday</span></li>
+                <li><span>Friday</span></li>
+                <li><span>Saturday</span></li>
+            </ul>
+            <p>No recipes planned for this week.</p>
+        </div>
+
+        <div clas="tab-content">
+            {% if meal_plans %}
+                {% for meal in meal_plans %}
+                    <div class="recipe-card">
+                        <div class="details">
+                            <img src="{{ meal.recipes.image_file}}" alt="{{ meal.recipes.name }}">
+                            <h4></h4>
+                            <p>Diet Type: {{meal.recipes}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</main>
+
+<!-- Include JavaScript -->
+<script src="{{ url_for('static', filename='js/meal.js') }}"></script>
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+
+{% endblock %}
+

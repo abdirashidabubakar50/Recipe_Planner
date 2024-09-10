@@ -2,43 +2,24 @@
 
 {% block title %} Dashbaord {% endblock %}
 
-{% block extra_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='recipe.css') }}">{% endblock %}
+{% block extra_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='styles/recipe.css') }}">{% endblock %}
 {% block content %}
     <div class="container-1" id="container-2">
-        <section class="dashboard-2">
-            <div class="side-bar-2" id="sidebar-2">
-                <div id="toggle-btn-2" class="toggle-btn-2">&lt;</div>
-                <a href="{{url_for('api.dashboard')}}" class="tab-2">
-                    <span class="icon">🏠</span>
-                    <span class="text">Dashboard</span>
-                </a>
-                <a href="recipes.html" class="tab-2">
-                    <span class="icon">🍲</span>
-                    <span class="text">Recipes</span>
-                </a>
-                <a href="meal_plan.html" class="tab-2">
-                    <span class="icon">📅</span>
-                    <span class="text">Meal Plan</span>
-                </a>
-            </div>
-        </section>
         <form action="" class="search-form">
             <input type="text" name="query" placeholder="search for recipes" required>
             <button type="submit">Search</button>
         </form>
     </div>
     <div class="container-2" id="container-2">
-        {% if query %}
+        <!-- {% if query %}
             <h2>Results for "{{ query}}"</h2>
-        {% endif %}
+        {% endif %} -->
 
         {% if recipes %}
             <div class="recipe-list">
-                {% for hit in recipes %}
-                    {% set recipe = hit.recipe %}
+                {% for recipe in recipes %}
                     <li class="recipe">
-                        <img src="{{ recipe.image}}" alt="{{recipe.label}}">
-                        <h2>{{ recipe.label }}</h2>
+                        <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
                         <p>Calories: {{recipe.calories | round(0)}}</p>
                         <p>Servings: {{recipe.yield}}</p>
                         <p><a href="{{ url_for('api.recipe_detail', recipe_id=recipe.uri | urlencode)}}" target="blank">View Recipe</a></p>
