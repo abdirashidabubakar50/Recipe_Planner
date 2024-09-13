@@ -13,57 +13,63 @@
             <h1>Meal Planner</h1>
         </div>
         <div class="meal-planner-tabs">
-            <button class="tab active">Today <span>0 recipes</span></button>
-            <button class="tab">This Week <span>0 recipes</span></button>
-            <button class="tab">Unscheduled Recipes <span></span></button>
+            <button class="tab active" data-target="today">Today <span>0 recipes</span></button>
+            <!-- <button class="tab" data-target="week">This Week <span>0 recipes</span></button> -->
+            <button class="tab" data-target="unscheduled">Unscheduled Recipes <span>{{ unscheduled_recipes_count }} recipes</span></button>
         </div>
 
         <!-- Content Sections for Tabs -->
-        <div class="tab-content">
-            <div id="calendar"></div> <!-- Calendar Container -->
-
-            <div class="add-recipe-container">
-                <button class="add-recipe-button">
-                    <span> + </span><a href="">Add Recipe</a>
-                </button>
-            </div>
-
-            <div class="no-recipes">
-                <div class="no-recipes-content">
-                    <img src="{{ url_for('static', filename='img/planner.png') }}" alt="No Recipes Icon">
-                    <p class="no-recipes-message">You have no recipes planned</p>
-                    <p class="no-recipes-subtext">Add recipes from your personalized recommendations or your saved recipe collections to get started.</p>
+        <div id="today" class="tab-content" style="display: block;">
+            <div id="calendar"></div>
+             {% if scheduled_recipes %}
+             {% for recipe in scheduled_recipes %}
+             <div class="recipe-card">
+                <div class="details">
+                    <img src="{{ recipe.recipe.image_url }}" alt="{{ recipe.recipe.name }}">
+                    <h4>{{ recipe.recipe.name }}</h4>
+                    <p>Diet Type: {{ recipe.recipe.diet_type }}</p>
+                    <a href="{{ url_for('api.recipe_detail', recipe_id=recipe.id) }}">View Recipe</a>
+                    <!-- Add a button to schedule the recipe -->
+                    <h4>{{recipe.start_time}} -> {{recipe.end_time}}</h4>
                 </div>
             </div>
+            {% endfor %}
+            {% endif %}
         </div>
 
-        <!-- Repeat content for other tabs with different IDs or classes -->
-        <div class="tab-content">
-            <!-- This Week Content -->
-            <ul>
-                <li><span>Sunday</span></li>
-                <li><span>Monday</span></li>
-                <li><span>Tuesday</span></li>
-                <li><span>Wednesday</span></li>
-                <li><span>Thursday</span></li>
-                <li><span>Friday</span></li>
-                <li><span>Saturday</span></li>
-            </ul>
-            <p>No recipes planned for this week.</p>
-        </div>
 
-        <div clas="tab-content">
-            {% if meal_plans %}
-                {% for meal in meal_plans %}
+        <div id="unscheduled" class="tab-content" style="display: none;">
+            {% if recipes %}
+                {% for recipe in recipes %}
                     <div class="recipe-card">
                         <div class="details">
-                            <img src="{{ meal.recipes.image_file}}" alt="{{ meal.recipes.name }}">
-                            <h4></h4>
-                            <p>Diet Type: {{meal.recipes}}</p>
+                            <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}">
+                            <h4>{{ recipe.name }}</h4>
+                            <p>Diet Type: {{ recipe.diet_type }}</p>
+                            <a href="{{ url_for('api.recipe_detail', recipe_id=recipe.id) }}">View Recipe</a>
+                            <!-- Add a button to schedule the recipe -->
+                            <button class="schedule-button" data-recipe-id="{{ recipe.id }}">Schedule Recipe</button>
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+                <p>No unscheduled recipes available.</p>
             {% endif %}
+        </div>
+
+        <!-- Modal for Scheduling -->
+        <div id="scheduleModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Schedule Recipe</h2>
+                <p>Select a time slot on the calendar to schedule your recipe.</p>
+                <div id="scheduleCalendar" class="modal-calendar"></div>
+                <input type="hidden" id="recipeId" name="recipe_id">
+                <input type="hidden" id="mealPlanId" name="meal_plan_id" value="{{meal_plan_id}}">
+                <input type="text" id="start" name="start" hidden>
+                <input type="text" id="end" name="end" hidden>
+                <button id="scheduleConfirmButton" class="schedule-submit-button">Confirm Schedule</button>
+            </div>
         </div>
     </div>
 </main>
@@ -73,6 +79,165 @@
 <!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        try {
+            const csrfToken = "{{ csrf_token() }}";
+
+            // Ensure JSON is safely rendered with escaped characters
+            const rawJsonString = `{{ calendar_events | tojson | safe }}`;
+            console.log('Raw JSON string:', rawJsonString);
+
+            // Parse the JSON data safely
+            let calendarEvents;
+            try {
+                calendarEvents = JSON.parse(rawJsonString); // Parsing JSON string into a JavaScript array
+                console.log("Parsed Events:", calendarEvents);
+            } catch (parseError) {
+                console.error("Error parsing JSON data:", parseError);
+                calendarEvents = []; // Fallback to an empty array to prevent further issues
+            }
+
+            // Initialize FullCalendar
+            const calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    },
+                    editable: true,
+                    events: calendarEvents, // Properly parsed events array
+                    eventClick: function (info) {
+                        info.jsEvent.preventDefault(); // Prevent default action on click
+                        if (info.event.url) {
+                            window.open(info.event.url, '_blank'); // Open the recipe detail in a new tab
+                        }
+                    }
+                });
+                calendar.render();
+            } else {
+                console.error("Calendar element not found.");
+            }
+
+            // Modal and scheduling calendar initialization
+            let scheduleCalendar;
+            const scheduleCalendarEl = document.getElementById('scheduleCalendar');
+
+            const showModal = () => {
+                if (!scheduleCalendar) {
+                    scheduleCalendar = new FullCalendar.Calendar(scheduleCalendarEl, {
+                        initialView: 'timeGridWeek',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'timeGridWeek,timeGridDay'
+                        },
+                        editable: true,
+                        selectable: true,
+                        selectMirror: true,
+                        select: function (info) {
+                            document.getElementById('start').value = info.startStr;
+                            document.getElementById('end').value = info.endStr;
+                        },
+                        events: [] // Placeholder for any events if necessary
+                    });
+                    scheduleCalendar.render();
+                }
+                document.getElementById('scheduleModal').style.display = 'block';
+            };
+
+            // Attach event listener for schedule buttons
+            document.querySelectorAll('.schedule-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    document.getElementById('recipeId').value = this.getAttribute('data-recipe-id');
+                    showModal();
+                });
+            });
+
+            // Close modal functionality
+            document.querySelector('.close').addEventListener('click', () => {
+                document.getElementById('scheduleModal').style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target == document.getElementById('scheduleModal')) {
+                    document.getElementById('scheduleModal').style.display = 'none';
+                }
+            });
+
+            // Handling the scheduling confirmation button
+            document.getElementById('scheduleConfirmButton').addEventListener('click', function () {
+                const startTime = document.getElementById('start').value;
+                const endTime = document.getElementById('end').value;
+                const recipeId = document.getElementById('recipeId').value;
+                const mealPlanId = document.getElementById('mealPlanId').value;
+
+                if (!startTime) {
+                    alert("Please select a time slot on the calendar.");
+                    return;
+                }
+
+                fetch('/schedule_recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        recipe_id: recipeId,
+                        meal_plan_id: mealPlanId,
+                        start_time: startTime,
+                        end_time: endTime
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        calendar.addEvent({
+                            title: data.recipe_name,
+                            start: data.start_time,
+                            end: data.end_time,
+                            url: data.url // Adding the URL to event
+                        });
+                        document.getElementById('scheduleModal').style.display = 'none';
+                    } else {
+                        alert('Failed to schedule the recipe.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error scheduling recipe:', error);
+                });
+            });
+
+            // Tab navigation for meal planner tabs
+            const tabs = document.querySelectorAll(".meal-planner-tabs .tab");
+            const contents = document.querySelectorAll(".tab-content");
+
+            function switchTab(event) {
+                tabs.forEach(tab => tab.classList.remove("active"));
+                contents.forEach(content => content.style.display = "none");
+
+                event.currentTarget.classList.add("active");
+                const targetContent = document.getElementById(event.currentTarget.getAttribute('data-target'));
+                if (targetContent) {
+                    targetContent.style.display = "block";
+                }
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", switchTab);
+            });
+
+            // Default to showing the first tab content
+            contents[0].style.display = "block";
+        } catch (error) {
+            console.error("Error initializing calendar:", error);
+        }
+    });
+</script>
+
 
 {% endblock %}
-

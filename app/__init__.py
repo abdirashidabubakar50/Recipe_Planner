@@ -22,7 +22,7 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
     with app.app_context():
-        from app.models import user, recipe, meal_plan, grocery_list, all_recipes, mealPlanRecipe
+        from app.models import user, recipe, meal_plan, grocery_list, all_recipes, mealPlanRecipe, scheduled_recipes
         db.create_all()
 
 

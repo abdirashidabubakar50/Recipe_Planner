@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request, current_app, jsonify
 from flask import flash, redirect, url_for
 import requests
 from flask_login import login_required, current_user, login_user, logout_user
@@ -7,6 +7,8 @@ from app.models.all_recipes import AllRecipe
 from app.models.meal_plan import Meal_plan
 from app.models.recipe import SavedRecipe
 from app.helpers.helpers import get_recipes
+from app.models.scheduled_recipes import ScheduledRecipes
+from app.models.mealPlanRecipe import MealplanRecipe
 from app.models.forms import AddToMealPlanForm, UpdateuserForm
 from app import db
 import json
@@ -16,7 +18,7 @@ api = Blueprint('api', __name__)
 
 
 """Landing page route"""
-@api.route('/home')
+@api.route('/')
 def home():
     return render_template('home.html')
 
@@ -77,17 +79,72 @@ def recipe_detail(recipe_id):
 @login_required
 def meal_plan():
     user = current_user
-    recipe = AllRecipe.query.get_or_404(recipe_id)
-    meal_plans= Meal_plan.query.filter_by(user_id=user.id).all()
-    for recipe in meal_plans.recipes:
-        print(recipe.name)
-        print(recipe.image_url)
+    meal_plan = Meal_plan.query.filter_by(user_id=user.id).first()
+
+    unscheduled_recipes = [
+        recipe for recipe in meal_plan.recipes 
+        if not any(sr.recipe_id == recipe.id for sr in meal_plan.scheduled_recipes)
+    ]
+
+    # Fetch scheduled recipes
+    # Convert scheduled recipes to JSON for FullCalendar
+    calendar_events = [{
+        'title': scheduled_recipe.recipe.name,
+        'start': scheduled_recipe.start_time.isoformat(),
+        'end': scheduled_recipe.end_time.isoformat(),
+        'url': url_for('api.recipe_detail', recipe_id=scheduled_recipe.recipe_id)
+    } for scheduled_recipe in ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()]
+
+    print("Calendar Events JSON:", json.dumps(calendar_events))
     return render_template(
         'meal_plan.html',
+        scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all(),
         user=current_user,
-        meal_plans=meal_plans,
-        user_id=current_user.id
+        recipes=unscheduled_recipes,
+        user_id=current_user.id,
+        calendar_events=calendar_events,
+        meal_plan_id=meal_plan.id
     )
+
+@api.route('/schedule_recipe', methods=['POST'])
+@login_required
+def schedule_recipe():
+    data = request.get_json()
+    print(f"Recieved data: {data}")
+    recipe_id = data.get('recipe_id')
+    meal_plan_id = data.get('meal_plan_id')
+    start_time = data.get('start_time')
+    end_time = data.get('end_time')
+
+
+    if not recipe_id or not start_time or not end_time or not meal_plan_id:
+        return {"success":False, "message": "Missing required data."}, 400
+    
+    meal_plan = MealplanRecipe.query.filter_by(meal_plan_id=meal_plan_id, recipe_id=recipe_id).first()
+    if not meal_plan:
+        return jsonify({'error': 'Meal Plan ID is required'}), 400
+    # Ensure the recipe exists
+    recipe = AllRecipe.query.get_or_404(recipe_id)
+    
+    # Create a scheduled recipe instance
+    scheduled_recipe = ScheduledRecipes(
+        meal_plan_id = meal_plan_id,
+        recipe_id=recipe.id,
+        start_time=start_time,
+        end_time=end_time
+    )
+
+    db.session.add(scheduled_recipe)
+    db.session.commit()
+
+    # Return success response
+    return {
+        'success': True,
+        # 'meal_plan_id': meal_plan.id,
+        'recipe_name': recipe.name,
+        'start_time': start_time,
+        'end_time': end_time
+    }
 
 
 """Saves the recipe"""
@@ -127,6 +184,7 @@ def save_recipe(recipe_id):
         ))
 
 
+
 """display the saved recipes"""
 @api.route('/saved_recipes/<int:user_id>')
 @login_required
@@ -155,21 +213,29 @@ def add_to_mealplan(recipe_id):
 
     if not meal_plan:
         # Create a new meal plan if none exists
-        meal_plan = Meal_plan(user_id=current_user.id, title="My Meal Plan")
-        db.session.add(meal_plan)
-        db.session.commit()
+        # meal_plan = Meal_plan(user_id=current_user.id, title="My Meal Plan")
+        # db.session.add(meal_plan)
+        # db.session.commit()
+        flash("meal plan not found or doesn't belong to you.", 'danger')
+        return redirect(url_for('api.recipe_detail'))
 
+    if recipe in meal_plan.recipes:
+        flash("Recipea already in the meal Plan!", 'warning')
+    else:
+        meal_plan.recipes.append(recipe)
+        db.session.commit()
+        flash("Recipe added to your meal plan!", 'success')
     # Add recipe to the meal plan
-    meal_plan_added = meal_plan.recipes.append(recipe)  
+    # meal_plan_added = meal_plan.recipes.append(recipe)  
     print(meal_plan.recipes)
     for recipe in meal_plan.recipes:
         print(f"Recipe: {recipe}")
         print(f"Name: {getattr(recipe, 'name', 'Attribute not found')}")
         print(f"Title: {getattr(recipe, 'title', 'Attribute not found')}")
         print(f"Image URL: {getattr(recipe, 'image_url', 'Attribute not found')}")
-    db.session.commit()
-    flash('Recipe added to your meal plan!', 'success')
-    return redirect(url_for('api.recipe_detail', recipe_id=recipe.id, meal_plan_added=meal_plan_added))
+    # db.session.commit()
+    # flash('Recipe added to your meal plan!', 'success')
+    return redirect(url_for('api.recipe_detail', recipe_id=recipe.id,meal_plan_id=meal_plan.id))
 
 
 
