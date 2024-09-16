@@ -9,11 +9,14 @@ header{
     padding: 4px;
     color: black;
     margin: 0;
+    position:sticky;
+    top: 0;
 }
 .header-content{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: auto;
 }
 
 nav ul{
@@ -54,4 +57,12 @@ nav ul li:hover{
     align-items: center;
     font-weight:600;
     font-family:Georgia, 'Times New Roman', Times, serif;
+}
+@media (max-width: 768px){
+    header{
+        display: flex;
+        max-width: 100%;
+        padding: 0;
+    }
+
 }

@@ -231,12 +231,16 @@ main {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 30px;
 }
 
 .btn-primary:hover {
     background-color: #fc3131;
 }
-
+ion-icon{
+    font-size: 24px;
+    color:red;
+}
 .modal {
     display: none;
     position: fixed;

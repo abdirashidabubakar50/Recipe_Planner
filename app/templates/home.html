@@ -5,6 +5,91 @@
 {% block extra_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">{% endblock %}
 {% block content %}
 <main>
-    div
+    <div class="image">
+        <img src="{{url_for('static', filename='img/content2.png')}}" alt="">
+        <img src="{{url_for('static', filename='img/content3.png')}}" alt="">
+    </div>
+    <section class="main-container">
+        <section class="sub-container-1">
+            <div class="text">
+                <img src="{{url_for('static', filename='img/log3.png')}}" alt="hello">
+                <h1>Smart Recipe Planner</h1>
+                <p>A home of delicious Recipes. Find out Thousands of Recipes on your fingertip!</p>
+                <form action="{{url_for('auth.register')}}" methos="POST">
+                    <button class="button-action" type="submit"> Get Started!</button>
+                </form>
+            </div>
+        </section>
+        <section class="sub-container-2">
+            <img src="{{url_for('static', filename='img/landing1.jpg')}}" alt="hello">
+        </section>
+    </section>
+    <section class="container-2">
+        <section class="cont-1">
+            <img src="{{url_for('static', filename='img/landing4.png')}}" alt="">
+        </section>
+        <section class="cont-2">
+            <div class="text-2">
+                <p>Choose any kind of Recipe according to your preference and diet type. Eat healthier at your comfort with Thousands of recipes you can choose from</p>
+            </div>
+        </section>
+    </section>
+    <section class="features-container">
+        <h2>Key Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30"  height="30" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                  </svg>
+                    
+                <h3>Personalized Recipes</h3>
+                <p>Recipes are tailored to your diet type and preferences.</p>
+            </div>
+            <div class="feature-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
+                    <path fill-rule="evenodd" d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z" clip-rule="evenodd" />
+                    <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                  </svg>
+                  
+                <h3>Recipe Search</h3>
+                <p>Search for recipes using ingredients or meal types and view detailed instructions.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Meal Planning</h3>
+                <p>Add recipes to your meal plan and organize your weekly meals.</p>
+            </div>
+            <div class="feature-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"   fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />
+                  </svg>
+                  
+                <h3>Save Recipes</h3>
+                <p>Save your favorite recipes and view them later with one click.</p>
+            </div>
+            <div class="feature-card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="30" height="30"  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+                  </svg>
+                  
+                <h3>Schedule Recipes</h3>
+                <p>Schedule recipes easily and integrate them into your calendar.</p>
+            </div>
+        </div>
+    </section>
+    <section class="About-container">
+        <h2> About Us</h2>
+        <p>The Smart Recipe Planner is designed to offer users a personalized and convenient way to manage their meals and dietary preferences. Whether you're looking to follow a specific diet, discover new recipes, or organize your weekly meals, the Smart Recipe Planner makes the process simple and enjoyable.</p>
+        <p>This platform provides thousands of recipes tailored to various preferences, complete with the ability to plan meals, create grocery lists, and schedule recipes using an integrated calendar. Our goal is to help users eat healthier and manage their diets more effectively.</p>
+        <section>
+            <ul>
+                <h2>Social Media</h2>
+                <li><ion-icon name="logo-github"></ion-icon> <a href="">github</a></li>
+                <li><ion-icon name="logo-youtube"></ion-icon> <a href="">Youtube Demo</a></li>
+            </ul>
+        </section>
+    </section>
 </main>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 {% endblock %}

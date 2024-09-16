@@ -9,6 +9,8 @@
 <div class="register-container">
     <div class="form-content">
         <h2>Create Your Account</h2>
+        <a href="{{ url_for('auth.google_login') }}" class="btn btn-danger">Login with Google</a>
+
         <form action="{{url_for('auth.register')}}" method="POST">
             {{ form.csrf_token }}
             <div class="form-group">
@@ -55,24 +57,6 @@
                     <small class="error">{{ errors['diet_type'] }}</small>
                 {% endif %}
             </div>
-            <!-- <div class="form-group">
-                <label for="allergies">Allergies</label>
-                <select id="allergies" name="allergies" class="form-control" multiple>
-                    <option value="gluten">Gluten</option>
-                    <option value="peanut">Peanut</option>
-                    <option value="tree nut">Tree Nut</option>
-                    <option value="soy">Soy</option>
-                    <option value="dairy">Dairy</option>
-                    <option value="egg">Egg</option>
-                    <option value="fish">Fish</option>
-                    <option value="shellfish">Shellfish</option>
-                    <option value="sesame">Sesame</option>
-                </select>
-                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple options.</small>
-                {% if errors.get('allergies') %}
-                    <small class="error">{{ errors['allergies'] }}</small>
-                {% endif %}
-            </div> -->
             <button type="submit" class="register-button">Register</button>
             <div>
                 <p>Already have an account ? </p>

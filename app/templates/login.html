@@ -5,7 +5,8 @@
 {% block extra_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">{% endblock %}
 {% block content %}
 <div class="login-container">
-    <div class="form-cotent">
+    <div class="form-content">
+        <a href="{{ url_for('auth.google_login') }}" class="btn btn-danger">Login with Google</a>
         <form action="{{url_for('auth.login')}}" method="POST">
             {{ form.csrf_token }}
             <div class="form-group">

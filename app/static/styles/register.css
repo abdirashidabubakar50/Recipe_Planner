@@ -1,9 +1,14 @@
 .register-container{
     background-color: #f4f5fc;
+    background: 
+        url('/static/img/content.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 89vh;
     margin: 0;
 }
 
@@ -83,3 +88,14 @@ input::placeholder {
     text-align: center;
     border: 1px solid #b71c1c
 }
+
+/* .register-container .reg-img{
+    display: flex;
+    align-items:flex-start;
+
+    width: auto;
+    margin:0;
+    padding: 10px;
+    border-radius: 8px;
+
+} */

@@ -59,17 +59,12 @@
                         <button type="submit" class="btn btn-primary">Update Profile</button>
                     </div>
                 </form>
-            </section>
-            <!-- <div class="no-recipes">
-                <div class="no-recipes-content">
-                    <img src="{{url_for('static', filename='img/planner.png')}}" alt="No Recipes Icon">
-                    <p class="no-recipes-message">You have no recipes planned</p>
-                    <p class="no-recipes-subtext">Add recipes from your personalized recommendations or your saved recipe collections to get started.</p>
+                <div class="logout">
+                    <a href="{{url_for('auth.logout')}}"><span><ion-icon src="{{url_for('static', filename='img/log-out-outline.svg')}}" class="logout"></ion-icon></span></a>
                 </div>
-            </div> -->
+            </section>
         </div>
 
-        <!-- Repeat content for other tabs with different IDs or classes -->
         <div class="tab-content">
             <!-- This Week Content -->
             
@@ -79,5 +74,7 @@
 </main>
 
 <!-- Include JavaScript -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script src="{{ url_for('static', filename='js/meal.js') }}"></script>
 {% endblock %}

@@ -33,9 +33,11 @@ def dashboard():
 
     """
     user_id = current_user.id
+
     # saved_recipe = saved_recipes(user_id)
     saved_recipes = SavedRecipe.query.filter_by(user_id=current_user.id).all()
     total_saved_recipes = len(saved_recipes)
+
     print(total_saved_recipes)
     recommended_recipes = get_recipes(db=db ,user=current_user)
     return render_template(
@@ -45,6 +47,7 @@ def dashboard():
         user=current_user,
         user_id=current_user.id
     )
+
 
 """search recipe route"""
 @api.route('/search_recipe', methods=['GET', 'POST'])
@@ -69,6 +72,7 @@ def recipe_detail(recipe_id):
     recipe = AllRecipe.query.get_or_404(recipe_id)
     return render_template(
         'recipe_detail.html',
+        recipe_id = recipe.id,
         recipe=recipe,
         user=current_user,
         user_id=current_user.id
@@ -87,24 +91,26 @@ def meal_plan():
     ]
 
     # Fetch scheduled recipes
+    scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()
     # Convert scheduled recipes to JSON for FullCalendar
     calendar_events = [{
         'title': scheduled_recipe.recipe.name,
         'start': scheduled_recipe.start_time.isoformat(),
         'end': scheduled_recipe.end_time.isoformat(),
         'url': url_for('api.recipe_detail', recipe_id=scheduled_recipe.recipe_id)
-    } for scheduled_recipe in ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()]
+    } for scheduled_recipe in scheduled_recipes]
 
     print("Calendar Events JSON:", json.dumps(calendar_events))
     return render_template(
         'meal_plan.html',
-        scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all(),
+        scheduled_recipes = scheduled_recipes,
         user=current_user,
         recipes=unscheduled_recipes,
         user_id=current_user.id,
         calendar_events=calendar_events,
         meal_plan_id=meal_plan.id
     )
+
 
 @api.route('/schedule_recipe', methods=['POST'])
 @login_required
@@ -213,30 +219,23 @@ def add_to_mealplan(recipe_id):
 
     if not meal_plan:
         # Create a new meal plan if none exists
-        # meal_plan = Meal_plan(user_id=current_user.id, title="My Meal Plan")
-        # db.session.add(meal_plan)
-        # db.session.commit()
-        flash("meal plan not found or doesn't belong to you.", 'danger')
-        return redirect(url_for('api.recipe_detail'))
-
+        meal_plan = Meal_plan(user_id=current_user.id, title="My Meal Plan")
+        db.session.add(meal_plan)
+        db.session.commit()
+        return redirect(url_for('api.recipe_detail', recipe_id=recipe.id))
     if recipe in meal_plan.recipes:
         flash("Recipea already in the meal Plan!", 'warning')
     else:
         meal_plan.recipes.append(recipe)
         db.session.commit()
         flash("Recipe added to your meal plan!", 'success')
-    # Add recipe to the meal plan
-    # meal_plan_added = meal_plan.recipes.append(recipe)  
     print(meal_plan.recipes)
     for recipe in meal_plan.recipes:
         print(f"Recipe: {recipe}")
         print(f"Name: {getattr(recipe, 'name', 'Attribute not found')}")
         print(f"Title: {getattr(recipe, 'title', 'Attribute not found')}")
         print(f"Image URL: {getattr(recipe, 'image_url', 'Attribute not found')}")
-    # db.session.commit()
-    # flash('Recipe added to your meal plan!', 'success')
     return redirect(url_for('api.recipe_detail', recipe_id=recipe.id,meal_plan_id=meal_plan.id))
-
 
 
 """Display the user's profile and  update"""

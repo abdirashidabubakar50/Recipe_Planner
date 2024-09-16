@@ -1,9 +1,13 @@
 from flask import Blueprint,render_template, redirect, url_for, flash, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from app import db, oauth
 from flask_login import login_required, current_user, login_user, logout_user
 from app.models.user import User
 from app.models.forms import RegisterForm, LoginForm
+from authlib.integrations.flask_client import OAuth
+from flask import url_for
+import json
+import secrets
 
 auth = Blueprint('auth', __name__)
 
@@ -12,7 +16,7 @@ auth = Blueprint('auth', __name__)
 def register():
     form =RegisterForm()
     errors = {}
-    if form.validate_on_submit:
+    if form.validate_on_submit():
         if request.method == 'POST':
             username = request.form.get('username')
             email = request.form.get('email')
@@ -80,9 +84,62 @@ def login():
                 return redirect(url_for('api.dashboard'))
             else:
                 errors['username'] = "Incorrect username or password"
-                return render_template('login.html', errors=errors)
+                return render_template('login.html', errors=errors, form=form)
     return render_template('login.html', errors=errors,  form=form)
 
+
+
+""" google login route """
+@auth.route('/login/google')
+def google_login():
+    nonce = secrets.token_urlsafe(16)
+    session['nonce'] = nonce
+
+    print(f"Generated Nonce: {nonce}")
+    redirect_uri = url_for('auth.google_authorize', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri, nonce=nonce)
+
+"""google OAuth2 callback"""
+@auth.route('/login/google/authorize')
+def google_authorize():
+    try:
+        token = oauth.google.authorize_access_token()
+        nonce = session.get('nonce', None)
+
+        print(f"Stored Nonce: {nonce}")
+
+        if not nonce:
+            print('Nonce missing from session', 'error')
+            return redirect(url_for('auth.login'))
+        user_info = oauth.google.parse_id_token(token, nonce=nonce)
+        print(f"Token: {token}")
+        print(f"user info:{user_info}")
+
+        if user_info:
+            user = User.query.filter_by(email=user_info['email']).first()
+
+            if user:
+                """if user exists, log them in"""
+                login_user(user)
+                return redirect(url_for('api.dashboard'))
+            else:
+                """if user doesn't exist, create a new user"""
+                new_user = User(
+                    username=user_info['name'],
+                    email = user_info['email'],
+                    password=generate_password_hash('randompassword', method='pbkdf2:sha256')
+                )
+                new_user.save()
+                login_user(new_user)
+
+                print('Login successful', 'success')
+                return redirect(url_for('api.dashboard'))
+        else:
+            print('failed to login with google', 'error')
+            return redirect(url_for('auth.login'))
+    except Exception as e:
+        print(f'Error during login with google: {str(e)}', 'error')
+        return redirect(url_for('auth.login'))
 
 
 """logout the user"""
