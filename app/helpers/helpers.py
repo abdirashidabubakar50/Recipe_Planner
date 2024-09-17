@@ -1,5 +1,5 @@
 from app.models.all_recipes import AllRecipe
-from sqlalchemy import or_, func
+from sqlalchemy import or_, func, cast, String
 from flask_login import current_user
 from app import db
 
@@ -39,7 +39,7 @@ def get_recipes(db, user=current_user, keyword=None, limit=500):
         print(f"Filtering recipes by name with keyword: {keyword}")
         query = query.filter(
             AllRecipe.name.ilike(f'%{keyword}%') | 
-            AllRecipe.ingredients.ilike(f'%{keyword}%')
+            cast(AllRecipe.ingredients, String).ilike(f'%{keyword}%')
         )
     
     """
