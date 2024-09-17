@@ -30,7 +30,7 @@ def get_recipes(db, user=current_user, keyword=None, limit=1000):
     if user.preferences:
         preferences = user.preferences
         preferences = [pref.lower() for pref in user.preferences]
-        query = query.filter(or_(*[AllRecipe.diet_type.ilike(f'%{pref}%') for p in preferences]))
+        query = query.filter(or_(*[AllRecipe.diet_type.ilike(f'%{p}%') for p in preferences]))
     
     """
     filter by search keyword if provided
