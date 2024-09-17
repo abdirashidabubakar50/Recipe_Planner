@@ -16,7 +16,7 @@ auth = Blueprint('auth', __name__)
 def register():
     form =RegisterForm()
     errors = {}
-    if form.validate_on_submit():
+    if form.validate_on_submit:
         if request.method == 'POST':
             username = request.form.get('username')
             email = request.form.get('email')
@@ -58,10 +58,11 @@ def register():
                 allergies=allergies
             )
             new_user.save()
-
+            print("registration was successful")
             flash('Registration successful! please log in.' 'success')
             return redirect(url_for('auth.login'))
-
+        else:
+            print("registration was not successful")
     return render_template('register.html', errors=errors, form=form)
 
 
