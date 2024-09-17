@@ -4,7 +4,7 @@ from flask_login import current_user
 from app import db
 
 
-def get_recipes(db, user=current_user, keyword=None, limit=500):
+def get_recipes(db, user=current_user, keyword=None, limit=1000):
     """
     Retrieve recipes from the database based on user preferences, search keywords or
     randomly.
@@ -30,7 +30,7 @@ def get_recipes(db, user=current_user, keyword=None, limit=500):
     if user.preferences:
         preferences = user.preferences
         preferences = [pref.lower() for pref in user.preferences]
-        query = query.filter(or_(*[AllRecipe.diet_type.contains(p) for p in preferences]))
+        query = query.filter(or_(*[AllRecipe.diet_type.ilike(f'%{pref}%') for p in preferences]))
     
     """
     filter by search keyword if provided
