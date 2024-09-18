@@ -6,7 +6,10 @@
 {% block content %}
 <div class="login-container">
     <div class="form-content">
-        <a href="{{ url_for('auth.google_login') }}" class="btn btn-danger">Login with Google</a>
+        <button class="google-btn">
+            <img src="{{url_for('static', filename='img/google.png')}}"  alt="Google logo" class="google-logo">
+            <a href="{{ url_for('auth.google_login') }}" class="google-text">Continue with Google</a>
+        </button>
         <form action="{{url_for('auth.login')}}" method="POST">
             {{ form.csrf_token }}
             <div class="form-group">
