@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static', filename='img/log3.png')}}" type="image/x-icon">
     <title>{% block title %}Smart Recipe Planner{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
 </head>
@@ -15,7 +16,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="{{url_for('auth.register')}}">Home</a></li>
+                    <li><a href="{{url_for('api.home')}}">Home</a></li>
                     <li><a href="{{url_for('auth.register')}}">Register</a></li>
                     <li><a href="{{ url_for('auth.login') }}">Login</a></li>
                 </ul>
