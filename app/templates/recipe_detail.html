@@ -51,10 +51,17 @@
             </ul>
         </div>
         <div class="ingredient-img">
-            <img src="{{url_for('static', filename='img/ingredients3.png')}}" alt="">
+            <ul>
+                <h3>Instructions | Directions</h3>
+                {% for instructions in recipe.instructions.split('. ')%}
+                <li>
+                    {{instructions}}
+                </li>
+                {%endfor%}
+            </ul>
         </div>
     </div>
-    <div class="instructions">
+    <!-- <div class="instructions">
         <ul>
             <h3>Instructions | Directions</h3>
             {% for instructions in recipe.instructions.split('. ')%}
@@ -63,7 +70,7 @@
             </li>
             {%endfor%}
         </ul>
-    </div>
+    </div> -->
     <script>
         const csrfToken = "{{ csrf_token() }}";  // Pass CSRF token to JavaScript
     

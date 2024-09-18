@@ -131,7 +131,7 @@ def schedule_recipe():
         return jsonify({'error': 'Meal Plan ID is required'}), 400
     # Ensure the recipe exists
     recipe = AllRecipe.query.get_or_404(recipe_id)
-    
+
     # Create a scheduled recipe instance
     scheduled_recipe = ScheduledRecipes(
         meal_plan_id = meal_plan_id,
@@ -190,7 +190,6 @@ def save_recipe(recipe_id):
         ))
 
 
-
 """display the saved recipes"""
 @api.route('/saved_recipes/<int:user_id>')
 @login_required
@@ -208,6 +207,7 @@ def saved_recipes(user_id):
         saved_recipes=saved_recipes,
         user_id=current_user.id, user=current_user
     )
+
 
 
 """ Adds the recipe to meal plan"""

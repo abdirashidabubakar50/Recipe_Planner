@@ -294,7 +294,71 @@ ion-icon{
     border-radius: 4px;
     margin-top: 10px;
 }
+.schedule-button{
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
 
+.schedule-button:hover{
+    background-color: #45a049;
+    color:chocolate;
+}
 .schedule-submit-button:hover {
     background-color: #45a049;
+}
+.calendar{
+    display: flex;
+    max-width: 700px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#calendar .fc-header-toolbar {
+    font-size: 14px !important; /* Smaller overall font size */
+    padding: 5px 10px !important; /* Add some padding for spacing */
+  }
+  
+  /* Adjust toolbar title size (Month/Year text) */
+  #calendar .fc-toolbar-title {
+    font-size: 16px !important; /* Smaller title */
+  }
+  
+  /* Make buttons smaller */
+  #calendar .fc-button {
+    font-size: 12px !important; /* Reduce button font size */
+    padding: 4px 8px !important; /* Make buttons smaller overall */
+  }
+  
+  /* Adjust the day headers (e.g., Mon, Tue, etc.) */
+  #calendar .fc-day-header {
+    font-size: 12px !important; /* Smaller font for day headers */
+  }
+
+  #calendar .fc-button .fc-icon {
+    font-size: 12px !important; /* Reduce icon size */
+  }
+
+@media(max-width: 768px){
+    .calender{
+        max-width: 300px;
+    }
+
+    #calendar .fc-button {
+        font-size: 10px !important;
+        padding: 3px 6px !important;
+      }
+    
+      /* Reduce toolbar title size for smaller screens */
+      #calendar .fc-toolbar-title {
+        font-size: 14px !important;
+      }
+    
+      /* Adjust day header size for smaller screens */
+      #calendar .fc-day-header {
+        font-size: 10px !important;
+      }
 }

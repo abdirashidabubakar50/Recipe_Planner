@@ -1,4 +1,7 @@
 {% extends 'layout2.html'%}
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/recipe.css') }}">
+{% endblock %}
 
 {% block content %}
 <section class="recipes">
