@@ -25,17 +25,6 @@
             <a href="{{url_for('api.meal_plan')}}">Meal Plans</a>
             <a href="{{url_for('auth.logout')}}">Settings</a>
         </nav>
-        <!-- Modal Structure -->
-        <!-- <div id="recipe-modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Recipe Options</h2>
-                <ul class="options-list">
-                    <li><a href="{{ url_for('api.search_recipe') }}">Search Recipes</a></li>
-                    <li><a href="">Saved Recipes</a></li>
-                </ul>
-            </div>
-        </div> -->
         <div class="user-info">
             <span>{{user.username}}</span>
             <a href="{{url_for('api.profile', user_id=user_id)}}"><img src="{{url_for('static', filename='img/profile.png')}}" alt="Profile Picture" class="profile-pic"></a>
@@ -44,37 +33,8 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>
+    <footer class="footer-main">
         <p>&copy; 2024 Smart Recipe Planner. All rights reserved.</p>
     </footer>
-    <script>
-        // Get the modal
-        var modal = document.getElementById("recipe-modal");
-    
-        // Get the link that opens the modal
-        var recipeLink = document.getElementById("recipe-link");
-    
-        // Get the <span> element that closes the modal
-        var closeBtn = document.getElementsByClassName("close")[0];
-    
-        // When the user clicks the link, open the modal
-        recipeLink.onclick = function (event) {
-            event.preventDefault(); // Prevent default link behavior
-            modal.style.display = "block";
-        }
-    
-        // When the user clicks on <span> (x), close the modal
-        closeBtn.onclick = function () {
-            modal.style.display = "none";
-        }
-    
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-    
 </body>
 </html>
