@@ -118,7 +118,7 @@ def google_authorize():
             if user:
                 """if user exists, log them in"""
                 login_user(user)
-                return redirect(url_for('api.dashboard'))
+                return redirect(url_for('api.dashboard', user_id=current_user.id, username=current_user.username))
             else:
                 """if user doesn't exist, create a new user"""
                 new_user = User(
