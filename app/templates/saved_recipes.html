@@ -4,18 +4,27 @@
 {% endblock %}
 
 {% block content %}
-<section class="recipes">
+<div class="main">
     {% if saved_recipes %}
-        {% for recipe in saved_recipes %}
-        <div class="recipe-card">
-            <div class="details">
-                <img src="{{ recipe.image_file}}" alt="{{ recipe.name }}">
-                <h4>{{ recipe.name }}</h4>
-                <p>Diet Type: {{ recipe.diet_type }}</p>
-                <a href="{{url_for('api.recipe_detail', recipe_id=recipe.id)}}">View Recipe</a>
-            </div>
-        </div>
-        {% endfor %}
+        <h2>Saved Recipes:</h2>
     {% endif %}
-</section>
+    <section class="recipes">
+        {% if saved_recipes %}
+            {% for recipe in saved_recipes %}
+            <div class="recipe-card" id="recipe-{{ recipe.id }}">
+                <div class="details">
+                    <img src="{{ recipe.image_file}}" alt="{{ recipe.name }}">
+                    <h4>{{ recipe.name }}</h4>
+                    <p>Diet Type: {{ recipe.diet_type }}</p>
+                    <a href="{{url_for('api.recipe_detail', recipe_id=recipe.id)}}">View Recipe</a>
+                    <button class="delete-recipe" data-recipe-id="{{ recipe.id }}">Delete</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No saved recipes available.</p>
+        {% endif %}
+    </section>
+</div>
+<script src="{{ url_for('static', filename='js/meal.js') }}"></script>
 {% endblock %}

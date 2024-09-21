@@ -28,9 +28,6 @@
                     <img src="{{ recipe.recipe.image_url }}" alt="{{ recipe.recipe.name }}">
                     <h4>{{ recipe.recipe.name }}</h4>
                     <p>Diet Type: {{ recipe.recipe.diet_type }}</p>
-                    <a href="{{ url_for('api.recipe_detail', recipe_id=recipe.id) }}">View Recipe</a>
-                    <!-- Add a button to schedule the recipe -->
-                    <h4>{{recipe.start_time}} -> {{recipe.end_time}}</h4>
                 </div>
             </div>
             {% endfor %}

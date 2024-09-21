@@ -24,15 +24,21 @@ def home():
 
 
 """ User dahsboard """
-@api.route('/dashboard', methods=['GET', 'POST'])
+@api.route('/dashboard/<int:user_id>/<string:username>', methods=['GET', 'POST'])
 @login_required
-def dashboard():
+def dashboard(user_id, username):
 
     """
     Render the dashboard template with the fetched data
 
     """
     user_id = current_user.id
+    username = current_user.username
+
+    # Validate that the logged-in user matches the user in the URL
+    if current_user.id != user_id or current_user.username != username:
+        flash("Unauthorized access.", "danger")
+        return redirect(url_for('auth.login'))
 
     # saved_recipe = saved_recipes(user_id)
     saved_recipes = SavedRecipe.query.filter_by(user_id=current_user.id).all()
@@ -45,7 +51,8 @@ def dashboard():
         recommended_recipes=recommended_recipes,
         total_saved_recipes=total_saved_recipes,
         user=current_user,
-        user_id=current_user.id
+        user_id=user_id,
+        username=username
     )
 
 
@@ -188,6 +195,20 @@ def save_recipe(recipe_id):
             recipe_id=recipe.id,
             user_id=user_id
         ))
+
+
+@api.route('/delete_saved_recipe/<int:recipe_id>', methods=['POST'])
+@login_required
+def delete_saved_recipe(recipe_id):
+    saved_recipe = SavedRecipe.query.filter_by(user_id=current_user.id, id=recipe_id).first()
+
+    if not saved_recipe:
+        return jsonify({'error': 'Recipe not found in your saved recipes'}), 404
+    
+    saved_recipe.delete()
+
+    return jsonify({'success': 'Recipe deleted successfully'}), 200
+
 
 
 """display the saved recipes"""

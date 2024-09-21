@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="shortcut icon" href="{{url_for('static', filename='img/log3.png')}}" type="image/x-icon">
     <title>{% block title %}Smart Recipe Planner{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
 </head>
@@ -14,7 +16,7 @@
             {% block extra_styles %}{% endblock %}
         </div>
         <nav class="nav-links">
-            <a href="{{url_for('api.dashboard')}}">Dashboard</a>
+            <a href="{{url_for('api.dashboard', user_id=current_user.id, username=current_user.username)}}">Dashboard</a>
             <div class="dropdown">
                 <a href="{{ url_for('api.search_recipe') }}" class="dropdown-link">Recipes</a>
                 <div class="dropdown-content">

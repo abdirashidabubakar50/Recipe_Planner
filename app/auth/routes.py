@@ -82,7 +82,7 @@ def login():
                 """set session data"""
                 login_user(user)
                 flash('Login successful!', 'successful')
-                return redirect(url_for('api.dashboard'))
+                return redirect(url_for('api.dashboard', user_id=current_user.id, username=current_user.username))
             else:
                 errors['username'] = "Incorrect username or password"
                 return render_template('login.html', errors=errors, form=form)
@@ -107,14 +107,10 @@ def google_authorize():
         token = oauth.google.authorize_access_token()
         nonce = session.get('nonce', None)
 
-        print(f"Stored Nonce: {nonce}")
-
         if not nonce:
             print('Nonce missing from session', 'error')
             return redirect(url_for('auth.login'))
         user_info = oauth.google.parse_id_token(token, nonce=nonce)
-        print(f"Token: {token}")
-        print(f"user info:{user_info}")
 
         if user_info:
             user = User.query.filter_by(email=user_info['email']).first()

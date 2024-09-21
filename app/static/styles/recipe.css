@@ -162,8 +162,45 @@ p{
 }
 
 
+.success-message, .error-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+}
+
+.success-message {
+    background-color: #4CAF50; /* Green */
+}
+
+.error-message {
+    background-color: #f44336; /* Red */
+}
+
+.delete-recipe{
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.delete-recipe:hover{
+    background-color: rgb(82, 6, 6);
+    cursor: pointer;
+}
+.main{
+    max-width: 1200px;
+    margin: auto;
+    height: 85vh;
+}
 .recipes{
-    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 @media (max-width: 768px) {
     .recipe-container,
