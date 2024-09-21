@@ -28,6 +28,7 @@
                     <img src="{{ recipe.recipe.image_url }}" alt="{{ recipe.recipe.name }}">
                     <h4>{{ recipe.recipe.name }}</h4>
                     <p>Diet Type: {{ recipe.recipe.diet_type }}</p>
+                    <button class="delete-scheduled-recipe" data-recipe-id="{{ recipe.recipe_id }}" data-meal-plan-id="{{ meal_plan.id }}">Remove from Meal Plan</button>
                 </div>
             </div>
             {% endfor %}

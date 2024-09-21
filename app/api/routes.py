@@ -92,24 +92,33 @@ def meal_plan():
     user = current_user
     meal_plan = Meal_plan.query.filter_by(user_id=user.id).first()
 
-    unscheduled_recipes = [
-        recipe for recipe in meal_plan.recipes 
-        if not any(sr.recipe_id == recipe.id for sr in meal_plan.scheduled_recipes)
-    ]
 
-    # Fetch scheduled recipes
-    scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()
-    # Convert scheduled recipes to JSON for FullCalendar
-    calendar_events = [{
-        'title': scheduled_recipe.recipe.name,
-        'start': scheduled_recipe.start_time.isoformat(),
-        'end': scheduled_recipe.end_time.isoformat(),
-        'url': url_for('api.recipe_detail', recipe_id=scheduled_recipe.recipe_id)
-    } for scheduled_recipe in scheduled_recipes]
+    if not meal_plan:
+        flash("You have not created any meal plans yet", "info")
+        unscheduled_recipes = []  # No recipes to show if no meal plan exists
+        scheduled_recipes = []
+        calendar_events = []
+        meal_plan_id = None
+    else:
+        unscheduled_recipes = [
+            recipe for recipe in meal_plan.recipes 
+            if not any(sr.recipe_id == recipe.id for sr in meal_plan.scheduled_recipes)
+        ]
+
+        # Fetch scheduled recipes
+        scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()
+        # Convert scheduled recipes to JSON for FullCalendar
+        calendar_events = [{
+            'title': scheduled_recipe.recipe.name,
+            'start': scheduled_recipe.start_time.isoformat(),
+            'end': scheduled_recipe.end_time.isoformat(),
+            'url': url_for('api.recipe_detail', recipe_id=scheduled_recipe.recipe_id)
+        } for scheduled_recipe in scheduled_recipes]
 
     print("Calendar Events JSON:", json.dumps(calendar_events))
     return render_template(
         'meal_plan.html',
+        meal_plan=meal_plan,
         scheduled_recipes = scheduled_recipes,
         user=current_user,
         recipes=unscheduled_recipes,
@@ -257,6 +266,23 @@ def add_to_mealplan(recipe_id):
         print(f"Title: {getattr(recipe, 'title', 'Attribute not found')}")
         print(f"Image URL: {getattr(recipe, 'image_url', 'Attribute not found')}")
     return redirect(url_for('api.recipe_detail', recipe_id=recipe.id,meal_plan_id=meal_plan.id))
+
+
+@api.route('/delete_scheduled_recipe/<int:meal_plan_id>/<int:recipe_id>', methods=['POST'])
+@login_required
+def delete_scheduled_recipe(meal_plan_id, recipe_id):
+    print(f"Received meal_plan_id: {meal_plan_id}, recipe_id: {recipe_id}")
+    # Fetch the scheduled recipe from the database
+    scheduled_recipe = ScheduledRecipes.query.filter_by(meal_plan_id=meal_plan_id, recipe_id=recipe_id).first()
+    if not scheduled_recipe:
+        return jsonify({'success': False, 'error': 'Recipe not found in the meal plan'}), 404
+
+    if scheduled_recipe:
+        db.session.delete(scheduled_recipe)
+        db.session.commit()
+        return jsonify(success=True)
+    else:
+        return jsonify(success=False, error="Scheduled recipe not found"), 404
 
 
 """Display the user's profile and  update"""
