@@ -130,7 +130,7 @@ def google_authorize():
                 login_user(new_user)
 
                 print('Login successful', 'success')
-                return redirect(url_for('api.dashboard'))
+                return redirect(url_for('api.dashboard', user_id=current_user.id, username=current_user.username))
         else:
             print('failed to login with google', 'error')
             return redirect(url_for('auth.login'))
