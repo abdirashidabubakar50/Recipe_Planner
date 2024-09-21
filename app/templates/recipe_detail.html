@@ -23,7 +23,6 @@
         <div class="text">
             <h1>{{ recipe.name }}</h1>
             <strong><p>{{recipe.diet_type}}</p></strong>
-            <button type="submit" class="action-button">Read directions</button>
             <button class="add-icon" id="add-to-mealplan-{{ recipe.id}}" type="submit" onclick="AddtoMealplan('{{ recipe.id }}')">
                 <svg width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                   <path d="M8 7V1a1 1 0 0 1 2 0v6h6a1 1 0 0 1 0 2H10v6a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h6z"/>
