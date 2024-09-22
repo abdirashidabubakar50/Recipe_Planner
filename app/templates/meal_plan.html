@@ -2,10 +2,8 @@
 
 {% block extra_styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/meal.css') }}">
-<!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 {% endblock %}
-
 {% block content %}
 <main>
     <div class="meal-planner-container">
@@ -13,12 +11,9 @@
             <h1>Meal Planner</h1>
         </div>
         <div class="meal-planner-tabs">
-            <button class="tab active" data-target="today">Today <span>0 recipes</span></button>
-            <!-- <button class="tab" data-target="week">This Week <span>0 recipes</span></button> -->
-            <button class="tab" data-target="unscheduled">Unscheduled Recipes <span>{{ unscheduled_recipes_count }} recipes</span></button>
+            <button class="tab active" data-target="today">Today <span></span></button>
+            <button class="tab" data-target="unscheduled">Unscheduled Recipes <span>{{ unscheduled_recipes_count }}</span></button>
         </div>
-
-        <!-- Content Sections for Tabs -->
         <div id="today" class="tab-content" style="display: block;">
             <div id="calendar" class="calendar"></div>
              {% if scheduled_recipes %}
@@ -34,8 +29,6 @@
             {% endfor %}
             {% endif %}
         </div>
-
-
         <div id="unscheduled" class="tab-content" style="display: none;">
             {% if recipes %}
                 {% for recipe in recipes %}
@@ -45,7 +38,6 @@
                             <h4>{{ recipe.name }}</h4>
                             <p>Diet Type: {{ recipe.diet_type }}</p>
                             <a href="{{ url_for('api.recipe_detail', recipe_id=recipe.id) }}">View Recipe</a>
-                            <!-- Add a button to schedule the recipe -->
                             <button class="schedule-button" data-recipe-id="{{ recipe.id }}">Schedule Recipe</button>
                         </div>
                     </div>
@@ -76,7 +68,6 @@
 <script src="{{ url_for('static', filename='js/meal.js') }}"></script>
 <!-- FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         try {
@@ -195,6 +186,7 @@
                 .then(data => {
                     if (data.success) {
                         calendar.addEvent({
+                            id:recipeId,
                             title: data.recipe_name,
                             start: data.start_time,
                             end: data.end_time,
@@ -236,6 +228,4 @@
         }
     });
 </script>
-
-
 {% endblock %}

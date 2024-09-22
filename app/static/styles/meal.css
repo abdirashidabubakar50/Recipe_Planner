@@ -5,6 +5,7 @@ main {
     font-family:Georgia, 'Times New Roman', Times, serif;
     background-color: #f9f9f9;
     color: #333;
+    height: auto;
 }
 
 .meal-planner-container {
@@ -44,6 +45,7 @@ main {
     color: #555;
     cursor: pointer;
     position: relative;
+    flex: 1 1 220px;
 }
 
 .tab.active {
@@ -83,35 +85,7 @@ main {
     color: #333;
 }
 
-.add-recipe-container {
-    text-align: left;
-    margin: 30px 0;
-}
 
-.add-recipe-button {
-    background-color: #f9f9f9;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.add-recipe-button span{
-    display: inline-block;
-    background-color: #e42d2d;
-    font-size: 20px;
-    color: #fcfcfc;
-    font-weight: bold;
-    padding: 5px;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    text-align: center;
-    line-height: 15px; 
-    cursor: pointer;
-    margin: 5px;
-}
 .add-recipe-button a {
     text-decoration: none;
     color: black;
@@ -146,14 +120,32 @@ main {
     margin-top: 10px;
 }
 
-.tab-content ul li{
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    padding: 8px;
+.tab-content {
+    /* padding: 8px;
     font-size: 26px;
     font-weight: 500;
-    color:#242222e1
+    color:#242222e1; */
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center; */
+
 }
 
+#unscheduled{
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.recipe-card{
+    border-radius: 0;
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    flex: 1 1 220px;
+    max-width: 280px;
+    min-width: 200px;
+    margin: 10px;
+}
 .flash-messages {
     margin: 20px 0;
     padding: 10px;
@@ -197,8 +189,8 @@ main {
 
 .profile-pic img {
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 60px;
+    height: auto;
 }
 
 .form-group {

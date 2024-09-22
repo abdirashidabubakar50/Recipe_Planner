@@ -25,7 +25,7 @@
                 </div>
             </div>
             <a href="{{url_for('api.meal_plan')}}">Meal Plans</a>
-            <a href="{{url_for('auth.logout')}}">Settings</a>
+            <a href="{{url_for('api.profile', user_id=user_id)}}">Settings</a>
         </nav>
         <div class="user-info">
             <span>{{user.username}}</span>
@@ -35,7 +35,7 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer class="footer-main">
+    <footer class="footer-main" style="display: none">
         <p>&copy; 2024 Smart Recipe Planner. All rights reserved.</p>
     </footer>
 </body>

@@ -34,25 +34,28 @@ def dashboard(user_id, username):
     """
     user_id = current_user.id
     username = current_user.username
-
     # Validate that the logged-in user matches the user in the URL
     if current_user.id != user_id or current_user.username != username:
         flash("Unauthorized access.", "danger")
         return redirect(url_for('auth.login'))
-
     # saved_recipe = saved_recipes(user_id)
     saved_recipes = SavedRecipe.query.filter_by(user_id=current_user.id).all()
     total_saved_recipes = len(saved_recipes)
 
-    print(total_saved_recipes)
+    # get the most recent recipe added by the user
+    recent_recipe = SavedRecipe.query.filter_by(user_id=current_user.id).order_by(SavedRecipe.id.desc()).first()
+
+    # Fetch the recommended Recipes
     recommended_recipes = get_recipes(db=db ,user=current_user)
+
     return render_template(
         'dashboard.html',
         recommended_recipes=recommended_recipes,
         total_saved_recipes=total_saved_recipes,
         user=current_user,
         user_id=user_id,
-        username=username
+        username=username,
+        recent_recipe=recent_recipe
     )
 
 
@@ -61,14 +64,14 @@ def dashboard(user_id, username):
 @login_required
 def search_recipe():
     keyword = request.args.get('query', '').strip()
-    print(f"Search keyword received: {keyword}")
     recipes = get_recipes(db=db, keyword=keyword, user=current_user)
-    print(f"Recipes returned: {[recipe.name for recipe in recipes]}")
+    recent_recipe = SavedRecipe.query.filter_by(user_id=current_user.id).order_by(SavedRecipe.id.desc()).first()
     return render_template(
         'dashboard.html',
         recipes=recipes,
         user=current_user,
-        user_id=current_user.id
+        user_id=current_user.id,
+        recent_recipe=recent_recipe
     )
 
 
@@ -86,25 +89,32 @@ def recipe_detail(recipe_id):
     )
 
 
+"""Displays user's Meal Plan"""
 @api.route('/meal_plan', methods=['GET'])
 @login_required
 def meal_plan():
     user = current_user
     meal_plan = Meal_plan.query.filter_by(user_id=user.id).first()
-
-
     if not meal_plan:
         flash("You have not created any meal plans yet", "info")
         unscheduled_recipes = []  # No recipes to show if no meal plan exists
         scheduled_recipes = []
         calendar_events = []
         meal_plan_id = None
+        return render_template(
+            'meal_plan.html',
+            user=current_user.username,
+            user_id=current_user.id,
+            scheduled_recipes=scheduled_recipes,
+            unscheduled_recipes=unscheduled_recipes,
+            calendar_events=calendar_events,
+            meal_plan_id=meal_plan_id
+            )
     else:
         unscheduled_recipes = [
             recipe for recipe in meal_plan.recipes 
             if not any(sr.recipe_id == recipe.id for sr in meal_plan.scheduled_recipes)
         ]
-
         # Fetch scheduled recipes
         scheduled_recipes = ScheduledRecipes.query.join(Meal_plan).filter(Meal_plan.user_id == current_user.id).all()
         # Convert scheduled recipes to JSON for FullCalendar
@@ -115,7 +125,6 @@ def meal_plan():
             'url': url_for('api.recipe_detail', recipe_id=scheduled_recipe.recipe_id)
         } for scheduled_recipe in scheduled_recipes]
 
-    print("Calendar Events JSON:", json.dumps(calendar_events))
     return render_template(
         'meal_plan.html',
         meal_plan=meal_plan,
@@ -128,17 +137,15 @@ def meal_plan():
     )
 
 
+"""Schedule a recipe """
 @api.route('/schedule_recipe', methods=['POST'])
 @login_required
 def schedule_recipe():
     data = request.get_json()
-    print(f"Recieved data: {data}")
     recipe_id = data.get('recipe_id')
     meal_plan_id = data.get('meal_plan_id')
     start_time = data.get('start_time')
     end_time = data.get('end_time')
-
-
     if not recipe_id or not start_time or not end_time or not meal_plan_id:
         return {"success":False, "message": "Missing required data."}, 400
     
@@ -244,6 +251,7 @@ def saved_recipes(user_id):
 @api.route('/add_to_mealplan/<int:recipe_id>', methods=['POST'])
 @login_required
 def add_to_mealplan(recipe_id):
+    errors = {}
     recipe = AllRecipe.query.get_or_404(recipe_id)
     meal_plan = Meal_plan.query.filter_by(user_id=current_user.id).first()
 
@@ -254,17 +262,11 @@ def add_to_mealplan(recipe_id):
         db.session.commit()
         return redirect(url_for('api.recipe_detail', recipe_id=recipe.id))
     if recipe in meal_plan.recipes:
-        flash("Recipea already in the meal Plan!", 'warning')
+        errors['meal_plan'] = 'Meal Plan already added'
+        flash("Recipe already in the meal Plan!", 'warning')
     else:
         meal_plan.recipes.append(recipe)
         db.session.commit()
-        flash("Recipe added to your meal plan!", 'success')
-    print(meal_plan.recipes)
-    for recipe in meal_plan.recipes:
-        print(f"Recipe: {recipe}")
-        print(f"Name: {getattr(recipe, 'name', 'Attribute not found')}")
-        print(f"Title: {getattr(recipe, 'title', 'Attribute not found')}")
-        print(f"Image URL: {getattr(recipe, 'image_url', 'Attribute not found')}")
     return redirect(url_for('api.recipe_detail', recipe_id=recipe.id,meal_plan_id=meal_plan.id))
 
 
@@ -279,6 +281,14 @@ def delete_scheduled_recipe(meal_plan_id, recipe_id):
 
     if scheduled_recipe:
         db.session.delete(scheduled_recipe)
+
+        # Remove the recipe from the meal plan as well
+        meal_plan = Meal_plan.query.get(meal_plan_id)
+        recipe_to_remove = AllRecipe.query.get(recipe_id)
+        
+        if recipe_to_remove in meal_plan.recipes:
+            meal_plan.recipes.remove(recipe_to_remove)
+
         db.session.commit()
         return jsonify(success=True)
     else:

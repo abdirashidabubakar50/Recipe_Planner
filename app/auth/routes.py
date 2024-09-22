@@ -21,9 +21,8 @@ def register():
             username = request.form.get('username')
             email = request.form.get('email')
             password = request.form.get('password')
-            confirm_password = request.form.get("confirm password")
+            confirm_password = request.form.get("confirm_password")
             diet_type = request.form.get('diet_type')
-            allergies = request.form.get('allergies')
 
 
             if not username:
@@ -48,19 +47,19 @@ def register():
                 if existing_user.email == email:
                     errors['email'] = "Email address already exists"
                 return render_template('register.html', errors=errors, username=username, email=email, form=form)
-
-            # create a new user
-            new_user = User(
-                username=username,
-                email=email,
-                password=generate_password_hash(password, method='pbkdf2:sha256'),
-                preferences=diet_type,
-                allergies=allergies
-            )
-            new_user.save()
-            print("registration was successful")
-            flash('Registration successful! please log in.' 'success')
-            return redirect(url_for('auth.login'))
+            else:
+                # create a new user
+                new_user = User(
+                    username=username,
+                    email=email,
+                    password=generate_password_hash(password, method='pbkdf2:sha256'),
+                    preferences=diet_type,
+                    allergies=allergies
+                )
+                new_user.save()
+                print("registration was successful")
+                flash('Registration successful! please log in.' 'success')
+                return redirect(url_for('auth.login'))
         else:
             print("registration was not successful")
     return render_template('register.html', errors=errors, form=form)
@@ -74,7 +73,6 @@ def login():
         if request.method == 'POST':
             email = request.form.get('email')
             password = request.form.get('password')
-
             """ check if the user exists """
             user = User.query.filter_by(email=email).first()
 
@@ -84,10 +82,9 @@ def login():
                 flash('Login successful!', 'successful')
                 return redirect(url_for('api.dashboard', user_id=current_user.id, username=current_user.username))
             else:
-                errors['username'] = "Incorrect username or password"
+                errors['password'] = "Incorrect username or password"
                 return render_template('login.html', errors=errors, form=form)
     return render_template('login.html', errors=errors,  form=form)
-
 
 
 """ google login route """

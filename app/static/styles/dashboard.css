@@ -293,6 +293,7 @@ h1 {
 }
 
 
+
 @media (min-width: 1600px) {
     .recipes {
         gap: 20px; /* Increase gap slightly on extra-large screens */

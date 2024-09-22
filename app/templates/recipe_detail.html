@@ -11,15 +11,6 @@
 {% block content %}
 <main>
     <div class="recipe-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-             </div>
-            {% endif %}
-        {% endwith %}
         <div class="text">
             <h1>{{ recipe.name }}</h1>
             <strong><p>{{recipe.diet_type}}</p></strong>
@@ -29,6 +20,9 @@
                 </svg>
                 Add to Meal Plan
             </button>
+            {% if errors %}
+                <small class="error">{{ errors['meal_plan'] }}</small>
+            {% endif %}
             <button id="save-recipe-{{ recipe.id }}" type="submit" class="save-icon" onclick="SaveRecipe('{{ recipe.id }}')">
                 <svg width="16" height="16" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
                   <path d="M8 0a.5.5 0 0 1 .5.5V1h1V.5A.5.5 0 0 1 10 0h5a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-.5.5H1a.5.5 0 0 1-.5-.5V.5A.5.5 0 0 1 1 0h7zM8 1v.5h2V1h-2zm4 2H2v12h12V3zm-1 8H3v-1h8v1zm-4-2h4v1H7v-1zm2-2H6v1h3v-1z"/>

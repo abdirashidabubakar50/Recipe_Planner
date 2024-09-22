@@ -13,7 +13,6 @@
         </div>
         <div class="meal-planner-tabs">
             <button class="tab">Settings <span>Customize your settings</span></button>
-            <button class="tab">Preferences <span>Set your preferences</span></button>
         </div>
 
         <!-- Content Sections for Tabs -->
@@ -36,7 +35,7 @@
                     {{ form.csrf_token }}
                     <div class="profile-pic">
                         <!-- Optional: Add a profile picture upload feature -->
-                        <img src="{{ url_for('static', filename='img/profile_pic.png') }}" alt="Profile Picture">
+                        <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Profile Picture">
                     </div>
                     <div class="form-group">
                         <label for="username">Username:</label>

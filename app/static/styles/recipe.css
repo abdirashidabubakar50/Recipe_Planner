@@ -202,6 +202,12 @@ p{
     justify-content: center;
     align-items: center;
 }
+
+.error{
+    color: red;
+    font-size: 0.87rem;
+    margin-top: 5px;
+}
 @media (max-width: 768px) {
     .recipe-container,
     .recipe-details {
