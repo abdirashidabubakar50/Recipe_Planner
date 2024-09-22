@@ -120,16 +120,6 @@ main {
     margin-top: 10px;
 }
 
-.tab-content {
-    /* padding: 8px;
-    font-size: 26px;
-    font-weight: 500;
-    color:#242222e1; */
-    /* display: flex;
-    flex-direction: row;
-    justify-content: center; */
-
-}
 
 #unscheduled{
     display:flex;

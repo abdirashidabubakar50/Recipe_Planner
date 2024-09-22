@@ -55,7 +55,7 @@ def dashboard(user_id, username):
         user=current_user,
         user_id=user_id,
         username=username,
-        recent_recipe=recent_recipe
+        recent_recipe=recent_recipe,
     )
 
 
